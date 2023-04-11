@@ -12,7 +12,12 @@ class Get_swapi:
     def get_darth_vader_films():
         url_darth_vader = Get_swapi.api_darth_vader
         result_darth_vader = Http_methods.get(url_darth_vader)
-        Checking.check_status_code(result_darth_vader, '200')
+        Checking.check_all_status_code(result_darth_vader, '200')
+        Checking.print_check_all_status_code()
+        Checking.check_json_token(result_darth_vader, ['name', 'height', 'mass', 'hair_color', 'skin_color',
+                                                       'eye_color', 'birth_year', 'gender', 'homeworld', 'films',
+                                                       'species', 'vehicles', 'starships', 'created', 'edited', 'url'])
+        Checking.print_check_json_token()
         js_result_darth_vader = result_darth_vader.json()
         film_of_darth_vader = js_result_darth_vader["films"]
         return film_of_darth_vader
@@ -26,6 +31,9 @@ class Get_swapi:
             url_films = darth_vader_films[i]
             result_film = Http_methods.get(url_films)
             Checking.check_all_status_code(result_film, '200')
+            Checking.check_json_token(result_film, ['title', 'episode_id', 'opening_crawl', 'director', 'producer',
+                                                    'release_date', 'characters', 'planets','starships', 'vehicles',
+                                                    'species', 'created', 'edited', 'url'])
             js_result_film = result_film.json()
             characters_of_film = js_result_film['characters']
             for x in range(0, len(characters_of_film)):
@@ -33,6 +41,7 @@ class Get_swapi:
                         and characters_of_film[x] != Get_swapi.api_darth_vader:
                     characters_films_darth_vader.append(characters_of_film[x])
         Checking.print_check_all_status_code()
+        Checking.print_check_json_token()
         return characters_films_darth_vader
 
     """Добавляем имя каждого героя в файлик"""
@@ -43,6 +52,10 @@ class Get_swapi:
             url_character = characters_films_darth_vader[i]
             result_character = Http_methods.get(url_character)
             Checking.check_all_status_code(result_character, '200')
+            Checking.check_json_token(result_character, ['name', 'height', 'mass', 'hair_color', 'skin_color',
+                                                         'eye_color', 'birth_year', 'gender', 'homeworld', 'films',
+                                                         'species', 'vehicles', 'starships', 'created', 'edited',
+                                                         'url'])
             # декодируем в windows-1251 по тому что, есть одно имя (people/35/ - "Padmé Amidala") с ударением,
             # utf-8 не может его распознать
             result_character.encoding = 'windows-1251'
@@ -51,3 +64,4 @@ class Get_swapi:
             name_character_file.write(f'{i + 1}) {name_character} - "{url_character}" \n')
         name_character_file.close()
         Checking.print_check_all_status_code()
+        Checking.print_check_json_token()
